@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +11,10 @@ import 'package:flutter_app/constants.dart';
 class Home extends StatefulWidget {
   
   static const String routeName = 'Home';
+
+  const Home({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -53,6 +55,45 @@ class _HomeState extends State<Home> {
     load();
   }
 
+  Widget buildContent() {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: list.length,
+      itemBuilder: (context, i) {
+        Post o = list[i];
+        return ListTile(
+          onTap: () {
+            Navigator.push(context, 
+              MaterialPageRoute(
+                builder: (context) => PostView(
+                  id: o.id!,
+                ),
+              ),
+            );
+          },
+          title: Text(
+            o.title ?? '',
+            style: const TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+          subtitle: Text(
+            o.body ?? '',
+            style: const TextStyle(
+              fontSize: 14.0,
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (context, i) {
+        return const Divider(
+          thickness: 1.0,
+          color: Color(0xFFB1B1B1),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,42 +118,7 @@ class _HomeState extends State<Home> {
             key: refreshIndicatorKey,
             onRefresh: onRefresh,
             child: Scrollbar(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: list.length,
-                itemBuilder: (context, i) {
-                  Post o = list[i];
-                  return ListTile(
-                    onTap: () {
-                      Navigator.push(context, 
-                        MaterialPageRoute(
-                          builder: (context) => PostView(
-                            id: o.id!,
-                          ),
-                        ),
-                      );
-                    },
-                    title: Text(
-                      o.title ?? '',
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    subtitle: Text(
-                      o.body ?? '',
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, i) {
-                  return const Divider(
-                    thickness: 1.0,
-                    color: Color(0xFFB1B1B1),
-                  );
-                },
-              ),
+              child: buildContent(),
             ),
           ),
         ),
