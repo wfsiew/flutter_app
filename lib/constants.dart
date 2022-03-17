@@ -1,0 +1,1 @@
+const kAppToolbarHeight = 45.0;
